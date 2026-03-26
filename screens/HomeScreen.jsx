@@ -1,6 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
+
+    const navigation = useNavigation();
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,12 +23,24 @@ export default function HomeScreen() {
         fetchItems();
     }, []);
 
+    const handlePressItem = (item) => {
+        navigation.navigate('Details', { 
+            name: item.name,
+            email: item.email,
+            phone: item.phone, 
+        });
+    }
+
     return (
         <View style={styles.container}>
             {loading ? <Text>Cargando datos...</Text> : (
                 <FlatList
                     data={items}
-                    renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => handlePressItem(item)}>
+                            <Text style={styles.item}>{item.name}</Text>
+                        </TouchableOpacity>
+                    )
                     }
                     keyExtractor={item => item.id.toString()}
                 />

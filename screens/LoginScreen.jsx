@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function LoginScreen() {
 
-    const router = useRouter();
+    const navigation = useNavigation();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -30,7 +30,7 @@ export default function LoginScreen() {
             await AsyncStorage.setItem('password', password);
             alert('Datos guardados correctamente');
             console.log(`Usuario: ${username}, Contraseña: ${password}`);
-            router.navigate('./home')
+            navigation.navigate('Home')
         } else {
             alert('Por favor ingresa tanto el usuario como la contraseña');
             try {
