@@ -1,12 +1,24 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
 
     const navigation = useNavigation();
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+
+        
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('username');
+            navigation.replace(`Login`) 
+        } catch (error) {
+            console.log('Error al cerrar sesiòn', error);
+            
+        }
+    }
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -45,6 +57,7 @@ export default function HomeScreen() {
                     keyExtractor={item => item.id.toString()}
                 />
             )}
+            <Button title='Cerrar Sesion' onPress={handleLogout}/>
         </View>
     )
 }
