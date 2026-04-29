@@ -1,6 +1,6 @@
 import DetailsScreen from '@/screens/DetailsScreen.jsx';
 import HomeScreen from '@/screens/HomeScreen.jsx';
-import LoginScreen from '@/screens/LoginScreen.tsx';
+import LoginScreen from '@/screens/LoginScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

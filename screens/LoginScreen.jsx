@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function LoginScreen() {
 
@@ -9,15 +9,21 @@ export default function LoginScreen() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const navigation = useNavigation();
 
     const handleLogin = async () => {
+        setLoading(true);
+        setErrorMessage('');
         if (username && password) {
             try {
                 await AsyncStorage.setItem('username', username);
                 navigation.replace("Home");
             } catch (error) {
                 console.log('Error al guardar los datos en AsyncStorage', error);
+            } finally {
+                setLoading(false);
             }
         } else {
             setErrorMessage('Por favor ingresa tanto el usuario como la contraseña');
@@ -42,7 +48,11 @@ export default function LoginScreen() {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword} />
-            <Button title='Inciar Sesion' onPress={handleLogin} />
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+                <Button title='Inciar Sesion' onPress={handleLogin} />
+            )}
         </View>
     );
 }

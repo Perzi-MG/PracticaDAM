@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
 
     const navigation = useNavigation();
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState('')
 
         
     const handleLogout = async () => {
@@ -21,6 +22,21 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
+
+        const loadUserData = async () => {
+            try {
+                const storedUsername = await AsyncStorage.getItem('username');
+                if (storedUsername) {
+                    setUsername(storedUsername);
+                }
+            } catch (error) {
+                console.log('Error al cargar el nombre de usuario', error);
+                
+            } finally {
+                setLoading(false)
+            }
+        }
+
         const fetchItems = async () => {
             try {
                 const response = await fetch('https://jsonplaceholder.typicode.com/users');
@@ -33,6 +49,7 @@ export default function HomeScreen() {
             }
         }
         fetchItems();
+        loadUserData();
     }, []);
 
     const handlePressItem = (item) => {
@@ -43,8 +60,13 @@ export default function HomeScreen() {
         });
     }
 
+    if (loading) {
+        return <ActivityIndicator size={'large'} color={'#0000ff'}/>
+    }
+
     return (
         <View style={styles.container}>
+            <Text>{username}</Text>
             {loading ? <Text>Cargando datos...</Text> : (
                 <FlatList
                     data={items}
